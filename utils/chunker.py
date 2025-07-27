@@ -1,13 +1,17 @@
-import nltk
-from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk import pos_tag, ne_chunk
+from nltk.tokenize import sent_tokenize
 
-def chunk_text(text):
-    sentences = sent_tokenize(text)  # Correct tokenizer
+def chunk_text(text, max_chunk_size=300):
+    sentences = sent_tokenize(text)
     chunks = []
+    current_chunk = ""
+
     for sentence in sentences:
-        tokens = word_tokenize(sentence)
-        tagged = pos_tag(tokens)
-        tree = ne_chunk(tagged)
-        chunks.append(tree)
+        if len(current_chunk) + len(sentence) <= max_chunk_size:
+            current_chunk += sentence + " "
+        else:
+            chunks.append(current_chunk.strip())
+            current_chunk = sentence + " "
+    if current_chunk:
+        chunks.append(current_chunk.strip())
+
     return chunks
