@@ -1,18 +1,15 @@
-# utils/summarizer.py
-import os
-import pickle
-from nltk.tokenize.punkt import PunktSentenceTokenizer
+import nltk
+from nltk.tokenize import sent_tokenize
 
-# Load tokenizer manually from downloaded file
-punkt_path = r"C:\Users\admin\nltk_data\tokenizers\punkt\english.pickle"
+# Ensure 'punkt' is available
+nltk.download('punkt', quiet=True)
 
-with open(punkt_path, "rb") as f:
-    tokenizer = pickle.load(f)
+def split_into_sentences(text):
+    return sent_tokenize(text)
 
-def sent_tokenize(text):
-    return tokenizer.tokenize(text)
-
-
-def summarize_text(text, max_sentences=2):
-    sentences = sent_tokenize(text)
-    return " ".join(sentences[:max_sentences])
+def summarize_text(text, max_sentences=3):
+    sentences = split_into_sentences(text)
+    if len(sentences) <= max_sentences:
+        return text
+    else:
+        return ' '.join(sentences[:max_sentences])
